@@ -2,17 +2,17 @@ extends KinematicBody2D
 
 var ACCELERATION = 10000
 var MAX_SPEED = 50
-var FRICTION = 1000
+var FRICTION = 10000
 var velocity = Vector2.ZERO
 var is_running = null
 onready var Timer = get_node("Timer")
 const walk_speed = 95
 const run_speed = 150
-const run_acceleration = 10000
+const run_acceleration = 20000
 const walk_acceleration = 10000
-const longrun_speed = 1650
-const run_friction = 10000
-const walk_friction = 1000
+const longrun_speed = 165
+const run_friction = 20000
+const walk_friction = 10000
 var total_time_pressed
 onready var animation_player = $"Kris Animations"
 onready var animation_tree = $"Kris Animation Organiser"
@@ -38,9 +38,22 @@ func long_press(delta):
 
 func _physics_process(delta):
 	var input_vector = Vector2.ZERO
-	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
-	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
+	input_vector.x = Input.get_action_strength("ui_right")# - Input.get_action_strength("ui_left") #i think the prioritising has something to do with this
+	input_vector.x -= Input.get_action_strength("ui_left")
+	input_vector.y = Input.get_action_strength("ui_down")# - Input.get_action_strength("ui_up")
+	input_vector.y -= Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
+	
+	#if Input.get_action_strength("ui_right"):
+		#if Input.is_action_just_pressed("X"):
+			#animation_tree.set("parameters/Run/blend_position", input_vector) #if not then it might be is_running
+			#animation_state.travel("Run")
+		#if Input.is_action_just_released("X"):
+			#animation_tree.set("parameters/Walk/blend_position", input_vector)
+			#animation_state.travel("Walk")
+	#else:
+		#animation_tree.set("parameters/Idle/blend_position", input_vector)
+		#animation_state.travel("Idle")
 	
 	if is_running == true:
 		
